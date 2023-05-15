@@ -1,9 +1,9 @@
-from flask import Flask
+from flask import Flask, render_template, request
 
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello_world():
-    return 'Welcome to Flask!'
+@app.get('/')
+def root_get():
+    return render_template('index.html')
