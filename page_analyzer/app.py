@@ -4,6 +4,8 @@ from flask import (Flask, render_template, url_for,
                    redirect, request, flash, get_flashed_messages
                    )
 import page_analyzer.db_logic as db
+import requests
+
 
 load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
