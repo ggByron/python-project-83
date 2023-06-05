@@ -53,5 +53,24 @@ def urls_post():
 @app.get('/urls/<int:id>')
 def url_get(id):
     url = db.find_url(id)
+    checks = db.get_checks(id)
     msgs = get_flashed_messages(with_categories=True)
-    return render_template('url.html', url=url, msgs=msgs)
+    return render_template('url.html', url=url, msgs=msgs, checks=checks)
+
+
+@app.post('/urls/<int:id>/checks')
+def url_check(id):
+    url = db.find_url(id)
+    response = requests.get(url['name'])
+    try:
+        response.raise_for_status()
+        db.check({'id': id,
+                  'status_code': response.status_code
+                  })
+        flash('Страница успешно проверена', 'alert-success')
+
+        return redirect(url_for('url_get', id=id))
+
+     except requests.exceptions.HTTPError:
+        flash('Something wrong', 'alert-danger')
+        return redirect(url_for('url_get', id=id))
